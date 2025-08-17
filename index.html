@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Beat 'Em Up — Vanilla JS</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Basic fallback if CSS fails to load */
+    body{margin:0;background:#0c0e12;color:#e7ecf3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial,sans-serif;overflow:hidden;}
+  </style>
+</head>
+<body>
+  <div id="preloader">
+    <div class="logo">Beat ’Em Up<br/><small>Vanilla JS Prototype</small></div>
+    <button id="startBtn" aria-label="start">Tap / Click to Start</button>
+    <div class="tips">WASD/Arrows to move · J/K/L/I = Light/Heavy/Dash/Parry<br/>On iPad: left stick + buttons. Rotate allowed.</div>
+  </div>
+
+  <canvas id="game" aria-label="game canvas" role="img"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hud hidden" aria-hidden="true">
+    <div class="bars">
+      <div class="bar hp"><span id="hpText">HP</span><div class="fill" id="hpFill"></div></div>
+      <div class="bar exp"><span id="expText">EXP</span><div class="fill" id="expFill"></div></div>
+      <div class="combo" id="comboText">COMBO x1</div>
+    </div>
+    <div class="stats">
+      <div class="stat">STR: <span id="statStr">10</span></div>
+      <div class="stat">SPD: <span id="statSpd">10</span></div>
+      <div class="stat">TEC: <span id="statTec">10</span></div>
+      <div class="stat">DUR: <span id="statDur">10</span></div>
+      <div class="lvl">LV <span id="level">1</span> · Pts <span id="points">0</span></div>
+    </div>
+    <button id="btnUpgrade" class="mini">UPGRADE</button>
+    <button id="btnResetSave" class="mini danger" title="ล้างเซฟ">RESET</button>
+  </div>
+
+  <!-- Upgrade Menu -->
+  <div id="upgrade" class="panel hidden" aria-hidden="true" role="dialog" aria-label="Upgrade Menu">
+    <div class="panel-inner">
+      <h2>Upgrade</h2>
+      <p>Stat Points: <b id="upPoints">0</b></p>
+      <div class="grid">
+        <div class="row">
+          <div>STR</div><div id="upStr">10</div><button data-up="STR">+1</button>
+        </div>
+        <div class="row">
+          <div>SPD</div><div id="upSpd">10</div><button data-up="SPD">+1</button>
+        </div>
+        <div class="row">
+          <div>TEC</div><div id="upTec">10</div><button data-up="TEC">+1</button>
+        </div>
+        <div class="row">
+          <div>DUR</div><div id="upDur">10</div><button data-up="DUR">+1</button>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="closeUpgrade">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Balance Panel (~) -->
+  <div id="balance" class="panel hidden" aria-hidden="true" role="dialog" aria-label="Balance Panel">
+    <div class="panel-inner">
+      <h2>Balance Panel</h2>
+      <div class="row sliders">
+        <label>STR <input id="balStr" type="range" min="1" max="200" value="10"></label>
+        <label>SPD <input id="balSpd" type="range" min="1" max="200" value="10"></label>
+        <label>TEC <input id="balTec" type="range" min="1" max="200" value="10"></label>
+        <label>DUR <input id="balDur" type="range" min="1" max="200" value="10"></label>
+      </div>
+      <canvas id="frametime" width="240" height="80" aria-label="frametime graph"></canvas>
+      <div class="actions">
+        <button id="closeBalance">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Virtual Controls for iPad -->
+  <div id="touchLayer" class="touch-layer hidden" aria-hidden="true">
+    <div id="joyL" class="joystick" aria-hidden="true">
+      <div class="base"></div>
+      <div class="stick"></div>
+    </div>
+    <div id="buttons" class="buttons">
+      <button class="btn act" id="btnLight">L</button>
+      <button class="btn act" id="btnHeavy">H</button>
+      <button class="btn act" id="btnDash">D</button>
+      <button class="btn act" id="btnParry">P</button>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(()=>{});
+      });
+    }
+  </script>
+</body>
+</html>
